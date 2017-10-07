@@ -49,6 +49,7 @@
      <Compile Include="Assets\Script\DeltaplannerMoveController.cs" />
      <Compile Include="Assets\Script\EasyEnemyController.cs" />
      <Compile Include="Assets\Script\MovePlayer.cs" />
+     <Compile Include="Assets\Script\MoveTutorial.cs" />
      <Compile Include="Assets\Script\UIElements.cs" />
      <Compile Include="Assets\Script\cameraPlayer.cs" />
  <Reference Include="UnityEngine.UI">
