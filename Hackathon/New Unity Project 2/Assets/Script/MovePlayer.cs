@@ -4,19 +4,24 @@ using UnityEngine;
 
 public class MovePlayer : MonoBehaviour {
 
+	public GameObject body;
 	public float speedPlayer = 20f;
 	public float upForce = 200f;
 	public bool isInJump = false;
 
 	public bool isHide = false;
 	public Vector3 previousPosition;
+	public bool rightDirection = true;
 
 	public float stateParameter = 0f;
 	public int state = 0; // 0- stay 1 -lying 2- jump
 	public bool blockChangeAnim = false;
+	public bool isThwowing = false;
+	public GameObject objForThrow;
+	public Transform posForThrow;
 	public Animator animator;
 	void Start () {
-		animator = GetComponent<Animator> ();
+		animator = GetComponentInChildren<Animator> ();
 	}
 
     // Update is called once per frame
@@ -38,10 +43,41 @@ public class MovePlayer : MonoBehaviour {
 
 		if (Input.GetKey (KeyCode.D)) {
 			transform.position += Vector3.right * speedPlayer * Time.deltaTime;
-
+			switch (state) {
+			case 0:
+				stateParameter = 0.125f;
+				break;
+			case 1: 
+				StopCoroutine ("GoLying");
+				stateParameter = 0.5f;
+				animator.SetFloat ("stateParameter", stateParameter);
+				print(animator.GetFloat ("stateParameter"));
+				break;
+			}
+			if (!rightDirection) {
+				body.transform.Rotate (new Vector3 (0, 180, 0));
+				rightDirection = true;
+			}
 		}
+
 		if (Input.GetKey (KeyCode.A)) {
 			transform.position += Vector3.left * speedPlayer * Time.deltaTime;
+			switch (state) {
+			case 0:
+				stateParameter = 0.125f;
+				break;
+			case 1: 
+				StopCoroutine ("GoLying");
+				stateParameter = 0.5f;
+				animator.SetFloat ("stateParameter", stateParameter);
+				print(animator.GetFloat ("stateParameter"));
+				break;
+			}
+			if (rightDirection) {
+				body.transform.Rotate (new Vector3 (0, 180, 0));
+				rightDirection = false;
+			}
+
 		}
 		if (Input.GetKey (KeyCode.W) && !isInJump && state != 1) {
 			isInJump = true;
@@ -50,20 +86,73 @@ public class MovePlayer : MonoBehaviour {
 			GetComponent<Rigidbody>().AddForce(new Vector3( 0, upForce, 0));
 		}
 		if (Input.GetKeyDown (KeyCode.S) && !isInJump) {
+			state = 1;
+			StartCoroutine ("GoLying");
 		}
 
+		if (Input.GetKeyUp (KeyCode.D) || Input.GetKeyUp (KeyCode.A) ) {
+			if (!blockChangeAnim) {
+				if (state == 0) {
+					stateParameter = 0f;
+				}
+			} else if (state == 1) {
+				stateParameter = 0.375f;
+				animator.SetFloat ("stateParameter", stateParameter);
+			}
+		}
+
+		if (Input.GetKeyUp (KeyCode.S) && state == 1) {
+			state = 0;
+			StopCoroutine ("GoLying");
+			blockChangeAnim = false;
+			stateParameter = 0;
+		}
+		if (state == 0 && Input.GetKeyDown(KeyCode.Space) && !isThwowing) {
+			isThwowing = true;
+			StartCoroutine ("ThrowGem");
+		}
 		if (!blockChangeAnim) {
 			animator.SetFloat ("stateParameter", stateParameter);
 		}
 	}
 
-	IEnumerator GoJump() {
-		stateParameter = 0.625f;
+	IEnumerator ThrowGem() {
+		print ("here");
+		blockChangeAnim = true;
+		stateParameter = 1f;
 		animator.SetFloat ("stateParameter", stateParameter);
-		yield return new WaitForSeconds (0.417f);
-		stateParameter = 0.75f;
+		yield return new WaitForSeconds (0.833f);
+		print ("here2");
+		stateParameter = 0f;
+		state = 0;
 		animator.SetFloat ("stateParameter", stateParameter);
 		blockChangeAnim = false;
+		isThwowing = false;
+		GameObject obj =  Instantiate (objForThrow, new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), transform.rotation) as GameObject;
+		if (rightDirection) {
+			obj.GetComponent<Rigidbody> ().AddForce (1000f, 300f, 0);
+		} else {
+			obj.GetComponent<Rigidbody> ().AddForce (-1000f, 300f, 0);
+		}
+		StopCoroutine ("ThrowGem");
+	}
+
+	IEnumerator GoJump() {
+		blockChangeAnim = true;
+		stateParameter = 0.625f;
+		animator.SetFloat ("stateParameter", stateParameter);
+		yield return new WaitForSeconds (0.2f);
+		stateParameter = 0.75f;
+		animator.SetFloat ("stateParameter", stateParameter);
+	}
+
+	IEnumerator GoLying() {
+		blockChangeAnim = true;
+		stateParameter = 0.25f;
+		animator.SetFloat ("stateParameter", stateParameter);
+		yield return new WaitForSeconds (0.2f);
+		stateParameter = 0.375f;
+		animator.SetFloat ("stateParameter", stateParameter);
 	}
 
     void OnCollisionEnter(Collision collision) {
@@ -106,12 +195,12 @@ public class MovePlayer : MonoBehaviour {
 	}
 
 	void HidePlayer(Vector3 newPos) {
-		previousPosition = transform.position;
-		transform.position = new Vector3 (transform.position.x, transform.position.y, newPos.z + 2f );
+		previousPosition = body.transform.position;
+		body.transform.position = new Vector3 (transform.position.x, transform.position.y, newPos.z + 2f );
 	}
 
 	void ShowPlayer() {
-		transform.position = previousPosition;
+		body.transform.position = previousPosition;
 	}
 
 }

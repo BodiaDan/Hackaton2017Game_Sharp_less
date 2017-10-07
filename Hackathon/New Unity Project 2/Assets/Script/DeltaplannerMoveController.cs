@@ -14,44 +14,44 @@ public class DeltaplannerMoveController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		gameObject.transform.position += Vector3.forward * deltaPlanSpeed * Time.deltaTime;
+		/*gameObject.transform.position += Vector3.forward * deltaPlanSpeed * Time.deltaTime;
 
 		if (Input.GetKey(KeyCode.D)) {
-			float tempRatateX = transform.rotation.x + rotateNumber * 2.5f;
-			if (tempRatateX > 30f) {
-				tempRatateX = 30f;
-			} else if (tempRatateX < -30f) {
-				tempRatateX = -30f;
+			float tempRatateZ =  -rotateNumber * 2.5f;
+			if (transform.localRotation.z > 30f) {
+				tempRatateZ = 0f;
+			} else if (transform.localRotation.z < -30f) {
+				tempRatateZ = 0f;
 			}
-			float tempRatateY = transform.rotation.x - rotateNumber * 2.0f;
-			if (tempRatateY > 40f) {
-				tempRatateY = 40f;
-			} else if (tempRatateX < -40f) {
-				tempRatateY = -40f;
+			float tempRatateY = rotateNumber * 2.0f;
+			if (transform.localRotation.y > 40f) {
+				tempRatateY = 0;
+			} else if (transform.localRotation.y < -40f) {
+				tempRatateY = 0f;
 			}
-			gameObject.transform.Rotate ( new Vector3 (0, tempRatateX, tempRatateY ));
+			gameObject.transform.Rotate ( new Vector3 (0, tempRatateY, tempRatateZ ));
 		}
 
 		if (Input.GetKey(KeyCode.A)) {
-			float tempRatateX = transform.rotation.x - rotateNumber * 2.5f;
-			if (tempRatateX > 30f) {
-				tempRatateX = 30f;
-			} else if (tempRatateX < -30f) {
-				tempRatateX = -30f;
+			float tempRatateZ = rotateNumber * 2.5f;
+			if (transform.localRotation.z > 30f) {
+				tempRatateZ = 0;
+			} else if (transform.localRotation.z < -30f) {
+				tempRatateZ = 0;
 			}
-			float tempRatateY = transform.rotation.x + rotateNumber * 2.0f;
-			if (tempRatateY > 40f) {
-				tempRatateY = 40f;
-			} else if (tempRatateX < -40f) {
-				tempRatateY = -40f;
+			float tempRatateY = -rotateNumber * 2.0f;
+			if (transform.localRotation.y > 40f) {
+				tempRatateY = 0;
+			} else if (transform.localRotation.y < -0) {
+				tempRatateY = -0;
 			}
-			gameObject.transform.Rotate ( new Vector3 (0, tempRatateX, tempRatateY ));
+			gameObject.transform.Rotate ( new Vector3 (0, tempRatateY, tempRatateZ ));
 
 			//gameObject.transform.Rotate ( new Vector3 (0, Mathf.Clamp(transform.rotation.x - rotateNumber * 2.5f,-30, 30 ), Mathf.Clamp(transform.rotation.z + rotateNumber,-40, 40 ) ));		
 		}
-		if (transform.rotation.x < 19) {
-			gameObject.transform.Rotate (new Vector3 (0.5f, 0, 0));
-		}
+		if (transform.localRotation.x < 19f) {
+			gameObject.transform.Rotate (new Vector3 (1f, 0, 0));
+		}*/
 	}
 
 	void OnTriggerEnter(Collider other)
@@ -75,8 +75,8 @@ public class DeltaplannerMoveController : MonoBehaviour {
 
 	void OnTriggerStay(Collider other) {
 		
-		if (other.transform.tag == "UpPiont" && transform.rotation.x > -19f) {
-			transform.Rotate (new Vector3 (-1f, 0, 0));
+		if (other.transform.tag == "UpPiont" && transform.localRotation.x > -19f) {
+			transform.Rotate (new Vector3 (1f, 0, 0));
 		}
 	}
 }
