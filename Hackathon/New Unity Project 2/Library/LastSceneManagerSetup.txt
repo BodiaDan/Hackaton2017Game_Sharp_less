@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/_Scenes/FirstAnim.unity
+- path: E:/Hackathon/New Unity Project 2/Assets/Scene/beach.unity
   isLoaded: 1
   isActive: 1
