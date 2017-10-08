@@ -121,7 +121,7 @@ public class MovePlayer : MonoBehaviour {
 		blockChangeAnim = true;
 		stateParameter = 1f;
 		animator.SetFloat ("stateParameter", stateParameter);
-		yield return new WaitForSeconds (0.833f);
+		yield return new WaitForSeconds (0.53f);
 		print ("here2");
 		stateParameter = 0f;
 		state = 0;
